@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚗 HA Commute Helper
+# 🚗 HomeAssistant -  Commute Helper
 
 > **Home Assistant integration for real-time commute briefings with traffic, weather, and transport updates**
 
