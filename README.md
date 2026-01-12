@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚗 HA Commute Helper
+# 🚗 ha-commute-helper
 
 > **Home Assistant integration for real-time commute briefings with traffic, weather, and transport updates**
 
@@ -15,21 +15,6 @@
 
 ---
 
-## 📑 Table of Contents
-
-- [✨ Features](#-features)
-- [📋 Prerequisites](#-prerequisites)
-- [🚀 Installation](#-installation)
-- [⚙️ Configuration](#️-configuration)
-- [📖 Usage](#-usage)
-- [🔧 Architecture](#-architecture)
-- [🎙️ Voice Briefings](#️-voice-briefings)
-- [🐛 Troubleshooting](#-troubleshooting)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [👤 Author](#-author)
-
----
 
 ## ✨ Features
 
@@ -77,13 +62,13 @@
 ```bash
 # Clone the repository
 cd /config
-git clone https://github.com/CaputoDavide93/HA_Commute_Helper.git
+git clone https://github.com/CaputoDavide93/ha-commute-helper.git
 
 # Copy custom component
-cp -r HA_Commute_Helper/custom_components/commute_helper custom_components/
+cp -r ha-commute-helper/custom_components/commute_helper custom_components/
 
 # Copy packages
-cp -r HA_Commute_Helper/packages/* packages/
+cp -r ha-commute-helper/packages/* packages/
 
 # Restart Home Assistant
 ```
@@ -197,7 +182,7 @@ graph TD
 ### Project Structure
 
 ```
-HA_Commute_Helper/
+ha-commute-helper/
 ├── custom_components/
 │   └── commute_helper/
 │       ├── __init__.py
