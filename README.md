@@ -1,16 +1,33 @@
-# 🚗 Home Assistant Commute Briefing
+<div align="center">
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
-[![GitHub Release](https://img.shields.io/github/v/release/CaputoDavide93/HA_Commute_Helper?style=for-the-badge)](https://github.com/CaputoDavide93/HA_Commute_Helper/releases)
-[![License](https://img.shields.io/github/license/CaputoDavide93/HA_Commute_Helper?style=for-the-badge)](LICENSE)
+# 🚗 HA Commute Helper
 
-A **free-first, multi-source** commute briefing integration for Home Assistant that provides smart morning notifications with real-time traffic and bus information.
+> **Home Assistant integration for real-time commute briefings with traffic, weather, and transport updates**
 
-<p align="center">
-  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=CaputoDavide93&repository=HA_Commute_Helper&category=integration">
-    <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." />
-  </a>
-</p>
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Home Assistant](https://img.shields.io/badge/Home_Assistant-41BDF5?style=for-the-badge&logo=home-assistant&logoColor=white)
+![HACS](https://img.shields.io/badge/HACS-Compatible-41BDF5?style=for-the-badge)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+
+[Features](#-features) • [Installation](#-installation) • [Configuration](#️-configuration) • [Contributing](#-contributing)
+
+</div>
+
+---
+
+## 📑 Table of Contents
+
+- [✨ Features](#-features)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 Installation](#-installation)
+- [⚙️ Configuration](#️-configuration)
+- [📖 Usage](#-usage)
+- [🔧 Architecture](#-architecture)
+- [🎙️ Voice Briefings](#️-voice-briefings)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👤 Author](#-author)
 
 ---
 
@@ -18,392 +35,259 @@ A **free-first, multi-source** commute briefing integration for Home Assistant t
 
 | Feature | Description |
 |---------|-------------|
-| 🚗 **Traffic ETA** | Real-time travel time via Waze integration (free, unlimited) |
-| 🚌 **Bus Departures** | Live bus times via TransportAPI (free tier: 30 req/day) |
-| 🔄 **Smart Fallback** | Automatic scraping fallback when API quota exhausted |
-| 📊 **Quota Management** | Intelligent API usage to stay within free limits |
-| 📅 **Calendar Integration** | Only notifies on office days based on your calendar |
-| 🔔 **Smart Notifications** | Morning briefings with actionable refresh button |
-| ⚙️ **Easy Setup** | UI-based configuration - no YAML editing required! |
+| 🚦 **Real-time Traffic** | Live traffic conditions on your commute route |
+| 🌤️ **Weather Briefing** | Current conditions and forecast for departure |
+| 🚇 **Transit Updates** | Public transport delays and disruptions |
+| 🎙️ **Voice Announcements** | TTS briefings via smart speakers |
+| ⏰ **Smart Scheduling** | Briefings based on your work schedule |
+| 📊 **Commute Stats** | Track and analyze commute times |
+| 🔄 **Scraper Microservice** | Real-time data collection |
+| 🏠 **HACS Compatible** | Easy installation via HACS |
 
 ---
 
-## 📦 Installation
+## 📋 Prerequisites
 
-### Method 1: HACS (Recommended)
+| Requirement | Version |
+|-------------|---------|
+| Home Assistant | 2023.1+ |
+| HACS | Latest |
+| Python | 3.11+ (for scraper) |
 
-<p align="center">
-  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=CaputoDavide93&repository=HA_Commute_Helper&category=integration">
-    <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." />
-  </a>
-</p>
+### Required Integrations
 
-**Or manually add to HACS:**
-
-1. Open **HACS** in Home Assistant
-2. Click **Integrations** → **⋮** (menu) → **Custom repositories**
-3. Add: `https://github.com/CaputoDavide93/HA_Commute_Helper`
-4. Select category: **Integration**
-5. Click **Add** → Search "Commute Briefing" → **Install**
-6. **Restart Home Assistant**
-
-### Method 2: Manual Installation
-
-1. Download the [latest release](https://github.com/CaputoDavide93/HA_Commute_Helper/releases)
-2. Extract and copy `custom_components/commute_briefing/` to your HA `config/custom_components/`
-3. **Restart Home Assistant**
+- Google Maps API (or alternative)
+- Weather integration (e.g., Met Office, OpenWeatherMap)
+- TTS service (optional, for voice briefings)
 
 ---
 
-## 🚀 Add Integration to Home Assistant
+## 🚀 Installation
 
-After installation, add the integration:
+### Option 1: HACS (Recommended)
 
-<p align="center">
-  <a href="https://my.home-assistant.io/redirect/config_flow_start/?domain=commute_briefing">
-    <img src="https://my.home-assistant.io/badges/config_flow_start.svg" alt="Open your Home Assistant instance and start setting up a new integration." />
-  </a>
-</p>
+1. Open HACS in Home Assistant
+2. Click **Integrations** → **+ Explore & Download Repositories**
+3. Search for "HA Commute Helper"
+4. Click **Download**
+5. Restart Home Assistant
 
-**Or manually:** Go to **Settings** → **Devices & Services** → **Add Integration** → Search "**Commute Briefing**"
-
----
-
-## 🔧 Prerequisites
-
-### 1. TransportAPI Account (Free)
-
-1. Sign up at [developer.transportapi.com](https://developer.transportapi.com/signup)
-2. Create an application to get your **App ID** and **App Key**
-3. Free tier: **30 requests/day** (plenty for commute checks!)
-
-### 2. Waze Travel Time Integration
-
-Set up the Waze integration to get traffic data:
-
-<p align="center">
-  <a href="https://my.home-assistant.io/redirect/brand/?brand=waze_travel_time">
-    <img src="https://my.home-assistant.io/badges/brand.svg" alt="Open your Home Assistant instance and start setting up Waze Travel Time." />
-  </a>
-</p>
-
-Configure:
-- **Origin**: Your home address
-- **Destination**: Your work address  
-- **Region**: Your region (e.g., EU)
-
-### 3. Scraper Microservice (Optional)
-
-For fallback bus data when API quota is exhausted:
+### Option 2: Manual Installation
 
 ```bash
+# Clone the repository
+cd /config
+git clone https://github.com/CaputoDavide93/HA_Commute_Helper.git
+
+# Copy custom component
+cp -r HA_Commute_Helper/custom_components/commute_helper custom_components/
+
+# Copy packages
+cp -r HA_Commute_Helper/packages/* packages/
+
+# Restart Home Assistant
+```
+
+### Option 3: With Scraper Microservice
+
+```bash
+# Deploy scraper
 cd scraper-microservice
 docker-compose up -d
 ```
 
-Verify it's running:
+---
+
+## ⚙️ Configuration
+
+### 1. Configure Secrets
+
+Copy and edit the secrets template:
+
 ```bash
-curl http://localhost:8765/health
+cp secrets_template.yaml secrets.yaml
 ```
-
----
-
-## ⚙️ Configuration Wizard
-
-The integration uses a **4-step setup wizard**:
-
-### Step 1: TransportAPI Credentials
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| **App ID** | Your TransportAPI application ID | `abc123` |
-| **App Key** | Your TransportAPI application key | `xyz789...` |
-| **Primary Bus Stop** | ATCO/NaPTAN code for your stop | `6200206710` |
-| **Backup Bus Stop** | Optional backup stop code | *(optional)* |
-| **Bus Routes Filter** | Comma-separated routes | `43,X43` |
-
-> 💡 **Finding your bus stop code:** Search on [TransportAPI](https://developer.transportapi.com/) or check your local transport authority website.
-
-### Step 2: Commute Settings
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Commute Window Start** | When checks begin | `08:00` |
-| **Commute Window End** | When checks end | `09:00` |
-| **Baseline Time** | Normal commute (minutes) | `45` |
-| **Traffic Delay Threshold** | Minutes delay to trigger alert | `10` |
-| **Bus Gap Threshold** | Minutes until bus to trigger alert | `20` |
-
-### Step 3: Integrations
-
-| Field | Description |
-|-------|-------------|
-| **Waze Entity** | Your Waze Travel Time sensor |
-| **Calendar Entity** | Work calendar for office day detection |
-| **Notification Service** | e.g., `notify.mobile_app_iphone` |
-| **Office Keywords** | Calendar keywords for office days |
-| **WFH Keywords** | Calendar keywords for work-from-home |
-| **Scraper URL** | Fallback scraper URL |
-
-### Step 4: Quota Management
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **Daily Quota** | Total API calls allowed | `30` |
-| **Reserved for Manual** | Calls saved for manual refresh | `6` |
-| **Max Auto Calls** | Maximum automatic calls/day | `10` |
-
----
-
-## 📱 Entities Created
-
-After setup, you'll have these entities:
-
-### Sensors
-
-| Entity | Description |
-|--------|-------------|
-| `sensor.commute_briefing_next_bus_minutes` | Minutes until next bus |
-| `sensor.commute_briefing_next_bus_time` | Next bus departure time (HH:MM) |
-| `sensor.commute_briefing_next_bus_route` | Next bus route number |
-| `sensor.commute_briefing_next_bus_status` | Status: On time / Late / Early |
-| `sensor.commute_briefing_traffic_time` | Current traffic time (minutes) |
-| `sensor.commute_briefing_traffic_delay` | Delay vs baseline (minutes) |
-| `sensor.commute_briefing_bus_data_source` | Data source: TransportAPI / Scraper |
-| `sensor.commute_briefing_api_calls_today` | API calls used today |
-| `sensor.commute_briefing_auto_api_calls_today` | Automatic API calls today |
-| `sensor.commute_briefing_last_check` | Last data refresh timestamp |
-
-### Binary Sensors
-
-| Entity | Description |
-|--------|-------------|
-| `binary_sensor.commute_briefing_commute_day` | Is today an office day? |
-| `binary_sensor.commute_briefing_can_call_api_auto` | Can make automatic API calls? |
-| `binary_sensor.commute_briefing_can_call_api_manual` | Can make manual API calls? |
-| `binary_sensor.commute_briefing_potential_issue` | Traffic/bus issue detected? |
-
-### Buttons
-
-| Entity | Description |
-|--------|-------------|
-| `button.commute_briefing_refresh_commute` | Manually refresh all data |
-| `button.commute_briefing_send_notification` | Send notification now |
-| `button.commute_briefing_reset_counters` | Reset daily API counters |
-
----
-
-## 🎨 Dashboard Example
-
-Add this card to your Lovelace dashboard:
 
 ```yaml
-type: vertical-stack
-cards:
-  - type: entities
-    title: 🚗 Commute Briefing
-    show_header_toggle: false
-    entities:
-      - entity: sensor.commute_briefing_traffic_time
-        name: Traffic Time
-        icon: mdi:car
-      - entity: sensor.commute_briefing_traffic_delay
-        name: Delay vs Usual
-        icon: mdi:clock-alert
-      - type: divider
-      - entity: sensor.commute_briefing_next_bus_route
-        name: Next Bus
-        icon: mdi:bus
-      - entity: sensor.commute_briefing_next_bus_minutes
-        name: Arrives In
-        icon: mdi:timer-sand
-      - entity: sensor.commute_briefing_next_bus_status
-        name: Status
-        icon: mdi:information
-      - type: divider
-      - entity: binary_sensor.commute_briefing_commute_day
-        name: Office Day
-      - entity: sensor.commute_briefing_api_calls_today
-        name: API Calls Today
-      - entity: sensor.commute_briefing_bus_data_source
-        name: Data Source
-
-  - type: horizontal-stack
-    cards:
-      - type: button
-        entity: button.commute_briefing_refresh_commute
-        name: Refresh
-        icon: mdi:refresh
-        tap_action:
-          action: call-service
-          service: button.press
-          target:
-            entity_id: button.commute_briefing_refresh_commute
-
-      - type: button
-        entity: button.commute_briefing_send_notification
-        name: Notify
-        icon: mdi:bell
-        tap_action:
-          action: call-service
-          service: button.press
-          target:
-            entity_id: button.commute_briefing_send_notification
+# secrets.yaml
+commute_origin: "Your Home Address"
+commute_destination: "Your Work Address"
+google_maps_api_key: "your-api-key"
+weather_api_key: "your-weather-key"
 ```
 
----
+### 2. Add to configuration.yaml
 
-## 🔔 Notification Example
+```yaml
+# configuration.yaml
+homeassistant:
+  packages: !include_dir_named packages/
 
-When you receive a commute briefing notification:
-
-```
-🚗 Commute Briefing
-
-Traffic: 52 min (+7 vs usual)
-🚌 Bus: Route 43 in 8 min at 07:38 — On time (TransportAPI)
-
-[Refresh]
-```
-
----
-
-## 📊 How It Works
-
-### Quota Management
-
-The integration intelligently manages your free API quota:
-
-```
-Daily Quota (30)
-├── Reserved for Manual (6) → Always available for button presses
-└── Available for Auto (24)
-    └── Max Auto Calls (10) → Limits automatic usage
+commute_helper:
+  origin: !secret commute_origin
+  destination: !secret commute_destination
+  arrival_time: "09:00"
+  departure_sensor: sensor.commute_departure_time
 ```
 
-### Data Flow
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Commute Check                             │
-├─────────────────────────────────────────────────────────────┤
-│  1. Check if office day (calendar)                          │
-│  2. Get traffic time (Waze - always free)                   │
-│  3. Get bus times:                                          │
-│     ├── Try TransportAPI (if quota available)               │
-│     └── Fallback to Scraper (if API unavailable)            │
-│  4. Calculate delays & issues                               │
-│  5. Send notification (if configured)                       │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Office Day Detection
-
-The integration checks your calendar for keywords:
-
-| Type | Keywords (configurable) | Result |
-|------|------------------------|--------|
-| **Office** | "Office", "Edinburgh" | ✅ Notifications enabled |
-| **WFH** | "WFH", "Home", "Remote" | ❌ Notifications disabled |
-
----
-
-## 🛠️ Services
-
-| Service | Description |
-|---------|-------------|
-| `commute_briefing.refresh_commute` | Manually refresh all data |
-| `commute_briefing.send_notification` | Send a briefing notification |
-| `commute_briefing.reset_counters` | Reset daily API counters |
-
-### Example Automation
+### 3. Configure Automations
 
 ```yaml
 automation:
-  - alias: "Morning Commute Check"
+  - alias: "Morning Commute Briefing"
     trigger:
       - platform: time
-        at: "07:30:00"
+        at: "07:00"
     condition:
       - condition: state
-        entity_id: binary_sensor.commute_briefing_commute_day
+        entity_id: binary_sensor.workday_sensor
         state: "on"
     action:
-      - service: commute_briefing.refresh_commute
-      - delay: "00:00:05"
-      - service: commute_briefing.send_notification
+      - service: tts.speak
+        entity_id: media_player.kitchen_speaker
+        data:
+          message: "{{ state_attr('sensor.commute_briefing', 'full_text') }}"
+```
+
+---
+
+## 📖 Usage
+
+### Available Entities
+
+| Entity | Description |
+|--------|-------------|
+| `sensor.commute_time` | Current estimated commute (minutes) |
+| `sensor.commute_departure_time` | Recommended departure time |
+| `sensor.commute_briefing` | Full text briefing |
+| `binary_sensor.commute_delayed` | True if delays detected |
+| `sensor.commute_traffic_level` | Traffic severity (low/medium/high) |
+
+### Lovelace Card Example
+
+```yaml
+type: entities
+title: Morning Commute
+entities:
+  - entity: sensor.commute_time
+    name: Travel Time
+  - entity: sensor.commute_departure_time
+    name: Leave By
+  - entity: sensor.commute_traffic_level
+    name: Traffic
+  - entity: sensor.weather_temperature
+    name: Temperature
+```
+
+---
+
+## 🔧 Architecture
+
+```mermaid
+graph TD
+    A[Scraper Microservice] --> B[Home Assistant]
+    C[Google Maps API] --> B
+    D[Weather API] --> B
+    E[Transit API] --> B
+    B --> F[Sensor Entities]
+    F --> G[Automations]
+    G --> H[TTS / Notifications]
+```
+
+### Project Structure
+
+```
+HA_Commute_Helper/
+├── custom_components/
+│   └── commute_helper/
+│       ├── __init__.py
+│       ├── manifest.json
+│       └── sensor.py
+├── packages/
+│   └── commute_helper.yaml
+├── scraper-microservice/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── main.py
+├── hacs.json
+└── secrets_template.yaml
+```
+
+---
+
+## 🎙️ Voice Briefings
+
+### Example Briefing Output
+
+> "Good morning! Your commute to work is currently 35 minutes due to moderate traffic on the M25. The weather is partly cloudy at 12 degrees. Leave by 8:25 to arrive on time. Have a great day!"
+
+### Customizing Briefings
+
+```yaml
+# In packages/commute_helper.yaml
+template:
+  - sensor:
+      - name: "Commute Briefing"
+        state: "{{ states('sensor.commute_time') }} min"
+        attributes:
+          full_text: >
+            Good morning! Your commute is {{ states('sensor.commute_time') }} minutes.
+            {% if states('sensor.commute_traffic_level') != 'low' %}
+            There is {{ states('sensor.commute_traffic_level') }} traffic.
+            {% endif %}
+            Temperature is {{ states('sensor.weather_temperature') }}°.
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### No Bus Data
+### Common Issues
 
-1. ✅ Verify your ATCO code is correct
-2. ✅ Check TransportAPI credentials are valid
-3. ✅ Ensure API quota isn't exhausted (check `sensor.commute_briefing_api_calls_today`)
-4. ✅ Test scraper: `curl http://localhost:8765/health`
+<details>
+<summary>❌ Entity Not Found</summary>
 
-### Notifications Not Sending
+```bash
+# Check if component loaded
+ha core info
 
-1. ✅ Verify notification service name (e.g., `notify.mobile_app_iphone`)
-2. ✅ Check `binary_sensor.commute_briefing_commute_day` is "on"
-3. ✅ Review Home Assistant logs for errors
-
-### API Quota Exceeded
-
-The integration automatically falls back to scraping. To reduce API usage:
-- Lower "Max Auto Calls" in settings
-- Increase delay thresholds
-- Reduce "Reserved for Manual"
-
-### Integration Not Loading
-
-1. ✅ Check HA logs: **Settings → System → Logs**
-2. ✅ Verify files in `custom_components/commute_briefing/`
-3. ✅ Restart Home Assistant completely
-
----
-
-## 📁 Project Structure
-
+# Verify configuration
+ha core check
 ```
-HA_Commute_Helper/
-├── custom_components/
-│   └── commute_briefing/
-│       ├── __init__.py          # Integration setup
-│       ├── manifest.json        # Integration metadata
-│       ├── config_flow.py       # UI configuration wizard
-│       ├── coordinator.py       # Data fetching & management
-│       ├── sensor.py            # Sensor entities
-│       ├── binary_sensor.py     # Binary sensor entities
-│       ├── button.py            # Button entities
-│       ├── const.py             # Constants & defaults
-│       ├── services.yaml        # Service definitions
-│       ├── hacs.json            # HACS metadata
-│       └── translations/
-│           └── en.json          # English translations
-├── scraper-microservice/
-│   ├── app.py                   # FastAPI scraper
-│   ├── Dockerfile               # Docker build
-│   ├── docker-compose.yml       # Docker Compose
-│   └── requirements.txt         # Python dependencies
-├── packages/
-│   └── commute_briefing.yaml    # Alternative YAML config
-└── README.md
+</details>
+
+<details>
+<summary>❌ API Rate Limit</summary>
+
+Reduce polling frequency in configuration:
+```yaml
+commute_helper:
+  scan_interval: 600  # 10 minutes
 ```
+</details>
+
+<details>
+<summary>❌ Scraper Not Connecting</summary>
+
+```bash
+# Check scraper logs
+docker-compose logs -f scraper
+
+# Verify network connectivity
+curl http://localhost:8080/health
+```
+</details>
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ---
@@ -414,15 +298,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
+<div align="center">
 
-- [Home Assistant](https://www.home-assistant.io/) - The amazing home automation platform
-- [TransportAPI](https://www.transportapi.com/) - UK transport data API
-- [Waze](https://www.waze.com/) - Traffic data provider
-- [HACS](https://hacs.xyz/) - Home Assistant Community Store
+## 👤 Author
+
+**Davide Caputo**
+
+[![GitHub](https://img.shields.io/badge/GitHub-CaputoDavide93-181717?style=for-the-badge&logo=github)](https://github.com/CaputoDavide93)
+[![Email](https://img.shields.io/badge/Email-CaputoDav%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:CaputoDav@gmail.com)
 
 ---
 
-<p align="center">
-  <strong>If you find this integration useful, please consider giving it a ⭐ star!</strong>
-</p>
+⭐ **If this tool helped you, please give it a star!** ⭐
+
+</div>
